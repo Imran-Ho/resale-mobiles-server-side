@@ -23,10 +23,29 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run (){
   try{
     const categoriesCollection = client.db("resale-mobiles").collection("categories");
+    const itemsCollection = client.db("resale-mobiles").collection("products");
+    const bookingCollection = client.db("resale-mobiles").collection("booking");
 
+// get categories in home page.
     app.get("/categories", async (req, res) =>{
       const query = {};
       const result = await categoriesCollection.find(query).toArray()
+      res.send(result)
+    })
+
+// get individual item.
+    app.get('/items/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = {item_id: id}
+      // const query = { _id: ObjectId(id) };
+      const items = await itemsCollection.find(query).toArray();
+      res.send(items)
+  })
+
+// booking info posted to database
+    app.post('/booking', async (req, res) =>{
+      const booking = req.body;
+      const result = await bookingCollection.insertOne(booking);
       res.send(result)
     })
 
