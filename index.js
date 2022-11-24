@@ -25,6 +25,7 @@ async function run (){
     const categoriesCollection = client.db("resale-mobiles").collection("categories");
     const itemsCollection = client.db("resale-mobiles").collection("products");
     const bookingCollection = client.db("resale-mobiles").collection("booking");
+    const usersCollection = client.db("resale-mobiles").collection("users");
 
 // get categories in home page.
     app.get("/categories", async (req, res) =>{
@@ -48,6 +49,13 @@ async function run (){
       const result = await bookingCollection.insertOne(booking);
       res.send(result)
     })
+
+// post created user to database
+    app.post('/users', async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user)
+      res.send(result);
+  })
 
   }
   finally{
