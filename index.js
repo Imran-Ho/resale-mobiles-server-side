@@ -144,6 +144,21 @@ async function run() {
     res.send(advertisement);
   })
 
+  // get advertisement products
+  app.get('/advertisement', async (req, res) =>{
+    const query = {};
+    const advertiseProduct = await advertisementCollection.find(query).toArray();
+    res.send(advertiseProduct)
+  })
+
+  // delete advertising product
+  app.delete('/advertisement/:id', async (req, res) => {
+    const id = req = req.params.id;
+    const filter = { _id: ObjectId(id) };
+    const result = await advertisementCollection.deleteOne(filter);
+    res.send(result);
+})
+
   }
   finally {
 
