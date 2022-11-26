@@ -28,6 +28,7 @@ async function run() {
     const usersCollection = client.db("resale-mobiles").collection("users");
     const paymentsCollection = client.db("resale-mobiles").collection("payments");
     const addProductsCollection = client.db("resale-mobiles").collection("addProducts");
+    const advertisementCollection = client.db("resale-mobiles").collection("advertisement");
 
     // get categories in home page.
     app.get("/categories", async (req, res) => {
@@ -115,7 +116,7 @@ async function run() {
 
 
 
-    // products info posted to database
+    // post products info posted to database
     app.post('/addedProducts', async (req, res) => {
       const products = req.body;
       const result = await addProductsCollection.insertOne(products);
@@ -128,6 +129,20 @@ async function run() {
       const products = await addProductsCollection.find(query).toArray();
       res.send(products)
     })
+    // delete added product
+    app.delete('/addedProducts/:id', async (req, res) => {
+      const id = req = req.params.id;
+      const filter = { _id: ObjectId(id) };
+      const result = await addProductsCollection.deleteOne(filter);
+      res.send(result);
+  })
+
+  // post product for advertisement
+  app.post('/advertisement', async (req, res) =>{
+    const product = req.body;
+    const advertisement = await advertisementCollection.insertOne(product);
+    res.send(advertisement);
+  })
 
   }
   finally {
