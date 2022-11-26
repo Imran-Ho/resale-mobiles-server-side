@@ -27,6 +27,7 @@ async function run() {
     const bookingCollection = client.db("resale-mobiles").collection("booking");
     const usersCollection = client.db("resale-mobiles").collection("users");
     const paymentsCollection = client.db("resale-mobiles").collection("payments");
+    const addProductsCollection = client.db("resale-mobiles").collection("addProducts");
 
     // get categories in home page.
     app.get("/categories", async (req, res) => {
@@ -109,6 +110,23 @@ async function run() {
 
       const updatedResult = await bookingCollection.updateOne(filter, updateDoc)
       res.send(result)
+    })
+
+
+
+
+    // products info posted to database
+    app.post('/addedProducts', async (req, res) => {
+      const products = req.body;
+      const result = await addProductsCollection.insertOne(products);
+      res.send(result);
+    })
+
+    // get posted doctors info
+    app.get('/addedProducts', async (req, res) => {
+      const query = {};
+      const products = await addProductsCollection.find(query).toArray();
+      res.send(products)
     })
 
   }
