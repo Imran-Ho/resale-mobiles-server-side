@@ -121,6 +121,23 @@ async function run() {
       const user = await usersCollection.findOne(query);
       res.send({ isAdmin: user?.type === 'Seller' });
   })
+   
+  // only sellers will show
+  app.get('/sellers', async (req, res) => {
+    const query = { "type": { $eq: "Seller" } };
+    const users = await usersCollection.find(query).toArray();
+    res.send(users)
+    
+  })
+
+  // only seller will be deleted
+  app.delete('/sellers/:id', async (req, res) => {
+    const id = req = req.params.id;
+    const filter = { _id: ObjectId(id) };
+    const result = await usersCollection.deleteOne(filter);
+    res.send(result);
+})
+  
 
     // post created user to database
     app.post('/users', async (req, res) => {
@@ -209,7 +226,7 @@ async function run() {
     const id = req = req.params.id;
     const filterId = { _id: ObjectId(id) };
     const deletedResult = await advertisementCollection.deleteOne(filterId);
-    console.log(deletedResult)
+    // console.log(deletedResult)
     res.send(deletedResult);
 })
 
