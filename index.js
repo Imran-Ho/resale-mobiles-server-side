@@ -94,6 +94,15 @@ async function run() {
       const booking = await bookingCollection.findOne(query)
       res.send(booking)
     })
+
+// booking order product delete 
+app.delete('/booking/:id', async (req, res) => {
+  const id = req = req.params.id;
+  const filter = { _id: ObjectId(id) };
+  const result = await bookingCollection.deleteOne(filter);
+  res.send(result);
+})
+
 // users jwt check
     app.get('/jwt', async (req, res) => {
       const email = req.query.email;
@@ -132,6 +141,21 @@ async function run() {
 
   // only seller will be deleted
   app.delete('/sellers/:id', async (req, res) => {
+    const id = req = req.params.id;
+    const filter = { _id: ObjectId(id) };
+    const result = await usersCollection.deleteOne(filter);
+    res.send(result);
+})
+  // only buyers will show
+  app.get('/buyers', async (req, res) => {
+    const query = { "type": { $eq: "Buyer" } };
+    const users = await usersCollection.find(query).toArray();
+    res.send(users)
+    
+  })
+
+  // only seller will be deleted
+  app.delete('/buyers/:id', async (req, res) => {
     const id = req = req.params.id;
     const filter = { _id: ObjectId(id) };
     const result = await usersCollection.deleteOne(filter);
@@ -221,14 +245,14 @@ async function run() {
     res.send(advertiseProduct)
   })
 
-  // delete advertising product
   app.delete('/advertisement/:id', async (req, res) => {
     const id = req = req.params.id;
-    const filterId = { _id: ObjectId(id) };
-    const deletedResult = await advertisementCollection.deleteOne(filterId);
-    // console.log(deletedResult)
-    res.send(deletedResult);
-})
+    const filter = { _id: ObjectId(id) };
+    const result = await advertisementCollection.deleteOne(filter);
+    res.send(result);
+  })
+
+
 
   }
   finally {
