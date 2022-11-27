@@ -17,7 +17,7 @@ app.use(express.json());
 
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.gof4ucb.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.USER_DB}:${process.env.PASSWORD_DB}@cluster0.gof4ucb.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 function verifyJwt(req, res, next) {
@@ -29,7 +29,7 @@ function verifyJwt(req, res, next) {
 
   const token = authHeader.split(' ')[1];
 
-  jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+  jwt.verify(token, process.env.ACCESS_TOKEN_KEY, function (err, decoded) {
       if (err) {
           return res.status(403).send({ message: 'forbidden access' })
       }
@@ -109,7 +109,7 @@ app.delete('/booking/:id', async (req, res) => {
       const query = { email: email };
       const user = await usersCollection.findOne(query);
       if (user) {
-          const token = jwt.sign({ email }, process.env.ACCESS_TOKEN, { expiresIn: '7d' })
+          const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_KEY, { expiresIn: '7d' })
           return res.send({ accessToken: token });
       }
       res.status(403).send({ accessToken: '' })
